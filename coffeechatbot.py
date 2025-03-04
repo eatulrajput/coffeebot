@@ -6,15 +6,15 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Ensure the API key is set
+# Ensure API key is set
 if "GEMINI_API_KEY" not in os.environ:
     st.error("Environment variable GEMINI_API_KEY is missing. Set it in your environment or .env file.")
     st.stop()
 
-# Configure the Generative AI client
+# Configure Generative AI client
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-# Define the generation configuration
+# Define generation config
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
@@ -23,61 +23,118 @@ generation_config = {
     "response_mime_type": "text/plain",
 }
 
-# Create the Generative AI model
+# Create Generative AI model
 try:
-    model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
-        generation_config=generation_config,
-    )
+    model = genai.GenerativeModel("gemini-1.5-flash", generation_config=generation_config)
     chat_session = model.start_chat(history=[])
 except Exception as e:
-    st.error(f"Failed to initialize the Gemini model: {e}")
+    st.error(f"Failed to initialize the Coffee Chatbot AI: {e}")
     st.stop()
 
 # Streamlit App Configuration
-st.set_page_config(page_title="Gemini Chatbot", layout="centered")
-st.title("Gemini Chatbot")
-st.write("Interact with the Gemini LLM. Enter your query below!")
+st.set_page_config(page_title="Coffee Chatbot ☕", page_icon="☕", layout="centered")
 
-# Initialize chat history in session state
-if "chat_history" not in st.session_state:
-    st.session_state["chat_history"] = []
-
-# Custom CSS to style the font weight
+# Custom CSS for Coffee Theme
 st.markdown(
     """
     <style>
-        .stTextInput > label {
-            font-weight: 350;
+        /* Import Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #f3e5ab;
         }
+
+        .main {
+            background: #fffaf0;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #6F4E37;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .stTextInput>label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #4A3F35;
+        }
+
+        .chat-bubble {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 85%;
+            font-size: 15px;
+        }
+
+        .user-bubble {
+            background-color: #6F4E37;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-bubble {
+            background-color: #DCC7AA;
+            color: #3E2723;
+            align-self: flex-start;
+        }
+
+        .submit-button {
+            background: linear-gradient(to right, #6F4E37, #9C6644);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(to right, #9C6644, #6F4E37);
+        }
+
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# User input section
-user_input = st.text_input("Your question:", key="user_input", placeholder="Type your message here...")
-submit = st.button("Ask")
+# Title with coffee emoji
+st.markdown("<h1>☕ Coffee Chatbot</h1>", unsafe_allow_html=True)
+st.write("Relax with a cup of coffee and chat with AI!")
+
+# Initialize chat history
+if "chat_history" not in st.session_state:
+    st.session_state["chat_history"] = []
+
+# User input
+user_input = st.text_input("Your Question:", key="user_input", placeholder="Ask anything...")
+
+# Submit button
+submit = st.button("☕ Ask Coffee Chatbot", key="ask_button")
 
 if submit and user_input:
     try:
-        # Send user input to Gemini and get response
+        # Get AI response
         response = chat_session.send_message(user_input)
         response_text = response.text
 
-        # Save interaction in chat history
+        # Store in chat history
         st.session_state["chat_history"].append(("You", user_input))
-        st.session_state["chat_history"].append(("Gemini", response_text))
-
-        # Show the immediate response
-        st.markdown(f"**You:** {user_input}")
-        st.markdown(f"**Gemini:** {response_text}")
+        st.session_state["chat_history"].append(("Coffee Chatbot", response_text))
 
     except Exception as e:
-        st.error(f"An error occurred while processing your request: {e}")
+        st.error(f"Error processing request: {e}")
 
-# Display the chat history after showing the immediate response
+# Display chat history with cozy coffee-themed chat bubbles
 if st.session_state["chat_history"]:
-    st.subheader("Chat History:")
+    st.subheader("🍂 Chat History")
     for role, text in st.session_state["chat_history"]:
-        st.markdown(f"**{role}:** {text}")
+        bubble_class = "user-bubble" if role == "You" else "bot-bubble"
+        st.markdown(f'<div class="chat-bubble {bubble_class}"><b>{role}:</b> {text}</div>', unsafe_allow_html=True)
