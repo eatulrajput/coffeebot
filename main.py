@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import google.generativeai as genai
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
+# from fastapi.responses import FileResponse
+# from fastapi.staticfiles import StaticFiles
 
 
 # Load environment variables
@@ -30,7 +30,7 @@ generation_config = {
 app = FastAPI(title="Coffee Chatbot API")
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # Allow CORS from all origins (customize for your frontend domain)
@@ -58,9 +58,9 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
 
-@app.get("/")
-def get_index():
-    return FileResponse("static/index.html")
+# @app.get("/")
+# def get_index():
+#     return FileResponse("static/index.html")
 
 
 @app.post("/chat", response_model=ChatResponse)
