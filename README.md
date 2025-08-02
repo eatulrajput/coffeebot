@@ -63,7 +63,7 @@ The application allows customization of the model's generation configuration. Mo
 3. View the AI response below the input box.
 
 ## Code Structure
-- **`app.py`**: The main application file containing the chatbot logic and Streamlit interface.
+- **`app.py`**: The main application file containing the chatbot logic.
 - **`.env`**: Environment file for storing Gemini API Key.
 
 ## Error Handling
