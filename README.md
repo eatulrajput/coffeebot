@@ -14,7 +14,7 @@ This repository contains a FastAPI-based application that integrates with Google
 1. Python 3.X.
 2. Install required Python libraries:
    ```bash
-   pip install fastapi python-dotenv google-generativeai pydantic
+   pip install fastapi python-dotenv google-generativeai uvicorn
    ```
 3. Obtain a Gemini API key from [Google AI](https://ai.google.dev/gemini-api/docs/).
 
@@ -93,6 +93,13 @@ Response
 - There is no feature to save the chat history.
 - Requires a valid Gemini API key to function.
 
+## Screenshots
+
+Frontend Design
+![Screenshot](./s1.png)
+
+Message and Response between Coffee Bot and the user
+![Screenshot](./s2.png)
 
 ## License
 This project is open-source and available under the [MIT License](LICENSE).
